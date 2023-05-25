@@ -2,6 +2,7 @@ package guru.microservice.studentservice.service;
 
 import guru.microservice.studentservice.entity.Student;
 import guru.microservice.studentservice.entity.StudentInfo;
+import guru.microservice.studentservice.proxy.AddressProxyService;
 import guru.microservice.studentservice.repository.StudentRepository;
 import guru.microservice.studentservice.request.Address;
 import guru.microservice.studentservice.request.StudentRequest;
@@ -20,6 +21,9 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     @Autowired
+    private AddressProxyService addressProxyService;
+
+    @Autowired
     private RestTemplate restTemplate;
 
     public Student registerStudent(StudentRequest studentRequest) {
@@ -32,12 +36,14 @@ public class StudentService {
                 .build();
 
         studentRepository.saveAndFlush(student);
+
+        //RestTemplate
         Map<String, String> uriVariable = new HashMap<>();
         uriVariable.put("personId", String.valueOf(student.getId()));
         uriVariable.put("zipCode", student.getZipCode());
+       // restTemplate.getForEntity("http://localhost:8281/api/v1/address/add/{personId}/{zipCode}", Address.class, uriVariable);
 
-        //RestTemplate
-        restTemplate.getForEntity("http://localhost:8281/api/v1/address/add/{personId}/{zipCode}", Address.class, uriVariable);
+        addressProxyService.registerAddress(String.valueOf(student.getId()), student.getZipCode());
         return student;
 
     }
@@ -45,7 +51,8 @@ public class StudentService {
     public StudentInfo getDetailStudent(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found with id" + studentId));
-        Address address =  restTemplate.getForObject("http://localhost:8281/api/v1/address/{personId}", Address.class, String.valueOf(student.getId()));
+       // Address address =  restTemplate.getForObject("http://localhost:8281/api/v1/address/{personId}", Address.class, String.valueOf(student.getId()));
+        Address address = addressProxyService.getAddressBypersonId(String.valueOf(student.getId()));
         return new StudentInfo(student,address);
     }
 }
