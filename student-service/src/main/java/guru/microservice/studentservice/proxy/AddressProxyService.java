@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
-@FeignClient(name="address-service" , url="localhost:8281/api/address")
+@FeignClient(name="address-service" , url="localhost:8281/api/v1/address")
 public interface AddressProxyService {
 
-    @GetMapping("/api/address/{personId}/{zipCode}")
+    @GetMapping("/add/{personId}/{zipCode}")
     public Address registerAddress(@PathVariable("personId") String personId, @PathVariable("zipCode") String zipCode);
 
-    @GetMapping("/api/address/{personId}")
+    @GetMapping("/{personId}")
     public Address getAddressBypersonId(@PathVariable("personId") String personI);
 }
