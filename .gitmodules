@@ -1,0 +1,3 @@
+[submodule "university-config-repo"]
+	path = university-config-repo
+	url = ./university-config-repo.git
