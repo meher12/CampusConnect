@@ -34,14 +34,14 @@ buildNumber.properties
     9
    10 # Intellij IDEA/WebStorm
    11 # https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
-   12 .idea/inspectionProfiles/
-   13 .idea/**/compiler.xml
-   14 .idea/**/encodings.xml
-   15 .idea/**/workspace.xml
-   16 .idea/**/tasks.xml
-   17 .idea/**/usage.statistics.xml
-   18 .idea/**/dictionaries
-   19 .idea/**/shelf
-   20 .idea/
+.idea/inspectionProfiles/
+.idea/**/compiler.xml
+.idea/**/encodings.xml
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/
    21 # Also ignore code styles because .editorconfig is used instead.
-   22 .idea/codeStyles/
+.idea/codeStyles/
