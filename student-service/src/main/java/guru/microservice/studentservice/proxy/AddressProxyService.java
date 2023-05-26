@@ -13,5 +13,5 @@ public interface AddressProxyService {
     public Address registerAddress(@PathVariable("personId") String personId, @PathVariable("zipCode") String zipCode);
 
     @GetMapping("/api/v1/address/{personId}")
-    public Address getAddressBypersonId(@PathVariable("personId") String personI);
+    public Address getAddressBypersonId(@PathVariable("personId") String personId);
 }

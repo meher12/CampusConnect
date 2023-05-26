@@ -1,7 +1,9 @@
 package guru.microservice.studentservice.request;
 
 
+import lombok.Data;
 
+@Data
 public class Address {
 
     private long id;
