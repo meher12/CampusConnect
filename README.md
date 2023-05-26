@@ -21,27 +21,36 @@ Add the following configuration class, `ApiGatewayConfiguration`, in the `api-ga
 
 ```java
 @Configuration
-public class ApiGatewayConfiguration {
+@RefreshScope
+public class ApiGateWayConfiguration {
 
     @Bean
     public RouteLocator gatewayRouter(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route(p -> p.path("/get") // http://localhost:8765/get
-                        .filters(f -> f.addRequestHeader("MyHeader", "MyURI")
-                                .addRequestParameter("Param", "MyValue"))
+                .route(p -> p.path("/get")
+                        .filters(f -> f.addRequestHeader("MyHeader", "MyURI").addRequestParameter("Param", "MyValue"))
                         .uri("http://httpbin.org:80"))
-                .route(p -> p.path("/currency-exchange-service/**").uri("lb://currency-exchange-service"))
-                .route(p -> p.path("/currency-conversion-service/**").uri("lb://currency-conversion-service"))
-                .route(p -> p.path("/currency-conversion-feign/**").uri("lb://currency-conversion-service"))
-                .route(p -> p.path("/currency-conversion-new/**")
-                        .filters(f -> f.rewritePath("/currency-conversion-new/(?<segment>.*)",
-                                "/currency-conversion-feign/${segment}"))
-                        .uri("lb://currency-conversion-service"))
+                .route(p -> p.path("/api/v1/students/**").uri("lb://student-service/"))
+                .route(p -> p.path("/api/address/**").uri("lb://address-service/"))
+                .route(p -> p.path("/student/**")
+                        .filters(f -> f.rewritePath("/student/(?<segment>.*)", "/api/v1/students/${segment}"))
+                        .uri("lb://student-service/"))
                 .build();
+
+        // p -> p.path("/api/v1/students/**" : Path to RestAPI).uri("lb://student-service/": name of service)
+
+        // To create a specific filter path :
+        /*
+        .route(p -> p.path("/student/**")
+        // this url student/(?<segment>.*) sreplace  /api/v1/students/${segment}
+                .filters(f -> f.rewritePath("/student/(?<segment>.*)", "/api/v1/students/${segment}"))
+                .uri("lb://student-service/"))
+         */
+
     }
 }
 ```
-###Commented the following lines:
+### Commented the following lines:
 ``` 
 #spring.cloud.gateway.discovery.locator.enabled=true
 #spring.cloud.gateway.discovery.locator.lowerCaseServiceId=true
