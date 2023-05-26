@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "api/v1/address")
+@RequestMapping(value = "/api/v1/address")
 @RefreshScope
 public class AddressController {
 
