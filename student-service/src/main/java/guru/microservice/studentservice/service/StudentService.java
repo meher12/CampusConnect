@@ -53,6 +53,7 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("Student not found with id" + studentId));
        // Address address =  restTemplate.getForObject("http://localhost:8281/api/v1/address/{personId}", Address.class, String.valueOf(student.getId()));
         Address address = addressProxyService.getAddressBypersonId(String.valueOf(student.getId()));
+
         return new StudentInfo(student,address);
     }
 }
