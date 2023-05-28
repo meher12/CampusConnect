@@ -59,4 +59,100 @@ public class ApiGateWayConfiguration {
 ### The new Custom Routes:
 http://localhost:8765/student/602 replace http://localhost:8765/student-service/api/v1/students/602:
 
+## Resilience4j:
+1. Getting started with Circuit Breaker - Resilience4j
+  * In address project add new dependencies:
+  ```
+  <dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-aop</artifactId>
+  </dependency>
+
+  <dependency>
+     <groupId>io.github.resilience4j</groupId>
+     <artifactId>resilience4j-spring-boot2</artifactId>
+  </dependency>
+  ```
+
+2. Playing with Resilience4j - Retry and Fallback Methods:
+  - Can we return a fallback response if a service is down ?
+  * CircuitBreakerController class:
+
+     ```
+        private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
+
+        @GetMapping("/sample-api")
+        @Retry(name="sample-api", fallbackMethod = "hardcodedResponse")
+        public String sampleApi() {
+           logger.info("Sample api call received");
+           ResponseEntity<String> forEntity = new RestTemplate().getForEntity("http://localhost:8080/some-dummy-url",
+                    String.class);
+           return forEntity.getBody();
+           
+        }
+        public String hardcodedResponse(Exception ex) {
+           return "fallback-response";
+        }
+     ```
+    In application.properties:
+     ```
+        resilience4j.retry.instances.sample-api.max-attempts=5
+        resilience4j.retry.instances.sample-api.waitDuration=1s
+        resilience4j.retry.instances.sample-api.enableExponentialBackoff=true
+     ```
+    In console we see 5 attempts:
+     ```
+        INFO 19676 --- [nio-8000-exec-1] n.g.m.c.CircuitBreakerController         : Sample api call received
+        INFO 19676 --- [nio-8000-exec-1] n.g.m.c.CircuitBreakerController         : Sample api call received
+        INFO 19676 --- [nio-8000-exec-1] n.g.m.c.CircuitBreakerController         : Sample api call received
+        INFO 19676 --- [nio-8000-exec-1] n.g.m.c.CircuitBreakerController         : Sample api call received
+        INFO 19676 --- [nio-8000-exec-1] n.g.m.c.CircuitBreakerController         : Sample api call received
+     ```
+    With "fallbackMethod" In browser (http://localhost:8281/sample-api) we see: "fallback-response" message instead of the default message error.
+
+3. Playing with Circuit Breaker Features of Resilience4j:
+   In terminal for auto send req:
+     ```
+        curl http://localhost:8281/sample-api
+        watch curl http://localhost:8281/sample-api
+        watch -n 0.1 curl http://localhost:8281/sample-api
+     ```
+   CircuitBreakerController class:
+      ```
+       //@Retry(name = "sample-api", fallbackMethod = "hardcodedResponse")
+         @CircuitBreaker(name = "default", fallbackMethod = "hardcodedResponse")
+      ```
+  - FailureRateThreshold: Configures the failure rate threshold in percentage. \ When the failure rate is equal or greater than the threshold the CircuitBreaker transitions to open and starts short-circuiting calls. \
+  - In application.properties file:
+      ```
+       resilience4j.circuitbreaker.instances.default.failure-rate-threshold=90
+      ``` 
+4. Exploring Rate Limiting and BulkHead Features of Resilience4j
+  1.  Rate limiting is an imperative technique to prepare your API for scale and establish high availability and reliability of your service
+  * @RateLimiter(name="default")
+      ```
+         #The number of permissions available during one limit refresh period
+         #For example, you want to restrict the calling rate of some methods to be not higher than 2 req/ms.
+         resilience4j.ratelimiter.instances.default.limit-for-period=2 
+
+         #The period of a limit refresh. After each period the rate limiter sets its permissions count back to the limitForPeriod value
+         resilience4j.ratelimiter.instances.default.limit-refresh-period=10s
+      ```
+  * In terminal for auto send req:
+      ```
+         curl http://localhost:8000/sample-api
+         watch curl http://localhost:8000/sample-api
+         watch -n 0.1 curl http://localhost:8000/sample-api
+      ```
+  * In browser we can see the result after two refresh we get a error because we configure the Rate limiting 'limit-for-period=2 ' and 'limit-for-period=2 '
+  2.  bulkhead pattern that can be used to limit the number of concurrent execution: in this example 10 req
+  * @Bulkhead(name="sample-api")
+  * In application.properties file:
+      ```
+       #Max amount of parallel executions allowed by the bulkhead
+       resilience4j.bulkhead.instances.sample-api.max-concurrent-calls=10
+      ``` 
+  * In browser we can see the result after 10 refresh
+
+
 
