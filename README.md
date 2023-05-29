@@ -168,6 +168,7 @@ http://localhost:8765/student/602 replace http://localhost:8765/student-service/
 
 ### Getting Started with Docker Compose  :
  * All config in docker-compose.yml file
+ * The name of the service in docker-compose should have t the same name of the service name in the app
 
 
 
