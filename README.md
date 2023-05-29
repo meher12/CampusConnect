@@ -155,26 +155,19 @@ http://localhost:8765/student/602 replace http://localhost:8765/student-service/
   * In browser we can see the result after 10 refresh
 
 ## Creating Docker Image for All Microservice :
+  * Example Dockerfile for address-service:
     
-     ```
-     <plugin>
-                 <groupId>org.springframework.boot</groupId>
-                 <artifactId>spring-boot-maven-plugin</artifactId>
-                 <configuration>
-                    <image>
-                          <name>guru12/msv2-${project.artifactId}:${project.version}</name>
-                    </image>
-                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
-                 </configuration>
-        </plugin>
+    ```
+     FROM openjdk:17
+     ARG JAR_FILE=*.jar
+     #RUN mvn clean install
+     COPY /target/${JAR_FILE} address-service.jar
+     ENTRYPOINT ["java", "-jar","address-service.jar"]
+     EXPOSE 8281
      ``` 
 
-    *  Run as > maven build > Goals: spring-boot:build-image -DskipTests
-    * Run container
-     ```
-     docker run -p 8000:8000 maldini12/msv2-name-microservice:0.0.1-SNAPSHOT
-     ```
-### Getting Started with Docker Compose - Currency Exchange and urrency Conversion Microservice :
+### Getting Started with Docker Compose  :
+ * All config in docker-compose.yml file
 
 
 
