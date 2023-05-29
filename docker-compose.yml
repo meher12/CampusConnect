@@ -18,6 +18,15 @@ services:
       # add profile:
       - spring.profiles.active:dev
       - spring.cloud.config.profile:dev
+      #Config DB:
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      - spring.datasource.url=jdbc:postgresql://db:5432/meherguru
+      - spring.datasource.username=meherguru
+      - spring.datasource.password=password
+      - spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+      # Eureka:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka
+      - spring.zipkin.baseurl:http://zipkin-server:9411/
       # RABBIT_URI: amqp://guest:guest@rabbitmq:5672
       # SPRING_RABBITMQ_HOST: rabbitmq
       # SPRING_ZIPKIN_SENDER_TYPE: rabbit
@@ -42,7 +51,16 @@ services:
       - spring.config.import=optional:configserver:http://config-server:8888/
       # add profile:
       - spring.profiles.active:dev
-      - pring.cloud.config.profile:dev
+      - spring.cloud.config.profile:dev
+      #Config DB:
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      - spring.datasource.url=jdbc:postgresql://db:5432/meherguru
+      - spring.datasource.username=meherguru
+      - spring.datasource.password=password
+      - spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+      # Eureka:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka
+      - spring.zipkin.baseurl:http://zipkin-server:9411/
 
       # RABBIT_URI: amqp://guest:guest@rabbitmq:5672
       # SPRING_RABBITMQ_HOST: rabbitmq
@@ -69,6 +87,9 @@ services:
       # add profile:
       - spring.profiles.active:dev
       - spring.cloud.config.profile:dev
+      # Eureka:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-server:8761/eureka
+      - spring.zipkin.baseurl:http://zipkin-server:9411/
 
       #  RABBIT_URI: amqp://guest:guest@rabbitmq:5672
       #  SPRING_RABBITMQ_HOST: rabbitmq
@@ -106,7 +127,7 @@ services:
     # restart: on-failure
     environment:
       - spring.cloud.config.server.git.uri:https://github.com/meher12/university-config-repo.git
-      # - spring.cloud.config.server.git.timeout:4
+      #- spring.cloud.config.server.git.timeout:4
     networks:
       - campusConnect-network
 
