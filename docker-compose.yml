@@ -78,9 +78,7 @@ services:
     depends_on:
       - config-server
       - discovery-server
-
       # restart: on-failure
-
       # - rabbitmq
     environment:
       - spring.config.import=optional:configserver:http://config-server:8888/
@@ -97,29 +95,31 @@ services:
     networks:
       - campusConnect-network
 
-
   discovery-server:
     image: 'discovery-server:latest'
-    container_name: discovery-server-container
+    container_name: discovery-server
     build:
       context: ./eureka-discovery-server
+    ports:
+      - "8761:8761"
     mem_limit: 700m
     depends_on:
       - config-server
-    ports:
-      - "8761:8761"
 
     environment:
       - spring.config.import=optional:configserver:http://config-server:8888/
       # add profile:
       - spring.profiles.active:dev
       - spring.cloud.config.profile:dev
+      - eureka.client.register-with-eureka=false
+      - eureka.client.fetch-registry=false
+
     networks:
       - campusConnect-network
 
   config-server:
     image: 'config-server:latest'
-    container_name: config-server-container
+    container_name: config-server
     build:
       context: ./config-server-university
     mem_limit: 700m
@@ -127,7 +127,8 @@ services:
       - "8888:8888"
     restart: on-failure
     environment:
-      - spring.cloud.config.server.git.uri:https://github.com/meher12/university-config-repo.git
+      - spring.cloud.config.server.git.uri=https://github.com/meher12/university-config-repo.git
+      - spring.cloud.config.server.git.default-label=master
       #- spring.cloud.config.server.git.timeout:4
     networks:
       - campusConnect-network
