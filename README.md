@@ -169,6 +169,12 @@ http://localhost:8765/student/602 replace http://localhost:8765/student-service/
 ### Getting Started with Docker Compose  :
  * All config in docker-compose.yml file
  * The name of the service in docker-compose should have t the same name of the service name in the app
+ * url in postman without apigateway and eureka server:
+    - http://localhost:8181/api/v1/students/add
+    - http://localhost:8181/api/v1/students/452
+ * url in postman with apigateway and eureka server :
+   - post http methode: http://localhost:8765/student/add
+   - get http methode : http://localhost:8765/student/1
 
 
 
