@@ -1,5 +1,65 @@
 # Campus Connect
 
+## Spring Cloud Config
+To configure Spring Cloud Config, follow these steps in the config-server project:
+ * Add the following dependencies to the pom.xml file:
+   ```
+    <!-- Config Server -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-config-server</artifactId>
+    </dependency>
+    ```
+ * Add the @EnableConfigServer annotation to the main class:
+    ```java
+    @EnableConfigServer
+    @SpringBootApplication
+    public class ConfigServerApplication {
+    
+        public static void main(String[] args) {
+            SpringApplication.run(ConfigServerApplication.class, args);
+        }
+    }
+    
+    ```
+ * Configure the Spring Cloud Config properties in the application.properties file:
+ ``` 
+ server.port=8888
+ spring.cloud.config.server.git.uri=<your-git-repo-url>
+ ```
+
+ Make sure to replace <your-git-repo-url> with the URL of your Git repository where the configuration files are stored.
+
+## Eureka Server
+To set up the Eureka Server, follow these steps in the eureka-server project:
+ * Add the following dependencies to the pom.xml file:
+```xml
+  <!-- Eureka Server -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+    </dependency>
+```
+ * Add the @EnableEurekaServer annotation to the main class:
+    ```
+    @EnableEurekaServer
+    @SpringBootApplication
+    public class EurekaServerApplication {
+    
+        public static void main(String[] args) {
+            SpringApplication.run(EurekaServerApplication.class, args);
+        }
+    }
+    
+    ```
+ * Configure the Eureka Server properties in the application.properties file:
+    ```
+    server.port=8761
+    eureka.client.register-with-eureka=false
+    eureka.client.fetch-registry=false
+    
+    ```
+
 ## API Gateway URL
 To enable this URL, we should enable it like this in the `api-gateway` project:
 
@@ -154,8 +214,8 @@ http://localhost:8765/student/602 replace http://localhost:8765/student-service/
       ``` 
   * In browser we can see the result after 10 refresh
 
-## Creating Docker Image for All Microservice :
-  * Example Dockerfile for address-service:
+## Creating Docker Image for All Microservices :
+  * To create a Docker image for each microservice, you can use a Dockerfile. Here's an example Dockerfile for the `address-service`:
     
     ```
      FROM openjdk:17
@@ -165,10 +225,11 @@ http://localhost:8765/student/602 replace http://localhost:8765/student-service/
      ENTRYPOINT ["java", "-jar","address-service.jar"]
      EXPOSE 8281
      ``` 
-
-### Getting Started with Docker Compose  :
- * All config in docker-compose.yml file
- * The name of the service in docker-compose should have t the same name of the service name in the app
+You can create similar Dockerfiles for other microservices and customize them accordingly.
+### Getting Started with Docker Compose
+To use Docker Compose for running the microservices, you can configure the docker-compose.yml file.
+Make sure to update the service names and ports according to your configuration.
+ * The name of the service in docker-compose should have  the same name of the service name in the app
  * url in postman without apigateway and eureka server:
     - http://localhost:8181/api/v1/students/add
     - http://localhost:8181/api/v1/students/452
