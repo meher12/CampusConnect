@@ -30,6 +30,18 @@ To configure Spring Cloud Config, follow these steps in the config-server projec
 
  Make sure to replace <your-git-repo-url> with the URL of your Git repository where the configuration files are stored.
 
+ To enable Config Server client in the student-service, , api-gateway  and address-service projects, follow these steps:
+
+ * Add the following dependencies to the pom.xml files of both projects:
+```xml
+<!-- Config Client -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-config</artifactId>
+</dependency>
+
+```
+
 ## Eureka Server
 To set up the Eureka Server, follow these steps in the eureka-server project:
  * Add the following dependencies to the pom.xml file:
@@ -59,6 +71,17 @@ To set up the Eureka Server, follow these steps in the eureka-server project:
     eureka.client.fetch-registry=false
     
     ```
+ * To enable Eureka Server client in the student-service, api-gateway and address-service projects, follow these steps:
+
+  Add the following dependencies to the pom.xml files of both projects: 
+```xml
+<!-- Eureka Client -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+
+```
 
 ## API Gateway URL
 To enable this URL, we should enable it like this in the `api-gateway` project:
@@ -225,6 +248,11 @@ http://localhost:8765/student/602 replace http://localhost:8765/student-service/
      ENTRYPOINT ["java", "-jar","address-service.jar"]
      EXPOSE 8281
      ``` 
+    ```shell
+    docker build -t api-gateway .
+    docker build -t student-service .
+    docker build -t address-service .
+    ```
 You can create similar Dockerfiles for other microservices and customize them accordingly.
 ### Getting Started with Docker Compose
 To use Docker Compose for running the microservices, you can configure the docker-compose.yml file.
